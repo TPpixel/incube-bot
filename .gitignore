@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+owner.json
+reviews.json
+messages.json
+*.pyc
