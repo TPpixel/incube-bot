@@ -4,3 +4,4 @@ owner.json
 reviews.json
 messages.json
 *.pyc
+.env

@@ -12,10 +12,28 @@ from telegram.ext import (
     filters,
 )
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def load_env():
+    env_path = os.path.join(BASE_DIR, ".env")
+    if not os.path.exists(env_path):
+        return
+    with open(env_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip())
+
+
+load_env()
+
 TOKEN = os.environ.get("BOT_TOKEN", "")
-OWNER_FILE = os.path.join(os.path.dirname(__file__), "owner.json")
-REVIEWS_FILE = os.path.join(os.path.dirname(__file__), "reviews.json")
-MESSAGES_FILE = os.path.join(os.path.dirname(__file__), "messages.json")
+OWNER_FILE = os.path.join(BASE_DIR, "owner.json")
+REVIEWS_FILE = os.path.join(BASE_DIR, "reviews.json")
+MESSAGES_FILE = os.path.join(BASE_DIR, "messages.json")
 
 GAMES = ["Space Hero", "Car Simulator", "Planer", "Beach Shooter", "Hit The Ball"]
 
@@ -432,6 +450,13 @@ async def owner_reply_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 
 def main():
+    if not TOKEN:
+        print("ОШИБКА: BOT_TOKEN не задан.")
+        print("Создай файл .env рядом с bot.py:")
+        print("  BOT_TOKEN=1234567890:AAE...")
+        print("или задай переменную окружения BOT_TOKEN.")
+        return
+
     from telegram.request import HTTPXRequest
     request = HTTPXRequest(connect_timeout=30, read_timeout=30, write_timeout=30)
     app = Application.builder().token(TOKEN).request(request).build()
