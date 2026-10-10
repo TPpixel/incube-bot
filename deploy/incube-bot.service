@@ -1,0 +1,18 @@
+[Unit]
+Description=Incube Telegram Reviews Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/server/incube/incube-bot
+ExecStart=/server/incube/incube-bot/venv/bin/python /server/incube/incube-bot/bot.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/server/incube/incube-bot/bot.log
+StandardError=append:/server/incube/incube-bot/bot.log
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
